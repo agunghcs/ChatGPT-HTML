@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ChatGPT</title>
+
+
+    <style>
+    
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            color: #333;
+            background-color: #fff; 
+        }
+
+        .banner_section {
+            background-color: #c23616; 
+            color: #fff; 
+            text-align: center;
+            padding: 5vh 5vw; 
+            border-bottom: 2px solid #a11907; 
+        }
+
+        .banner_section h1 {
+            font-size: calc(1.5em + 1vw); 
+            margin: 0;
+        }
+
+        .call-to-action-area {
+            background-color:  #f4f4f4;
+            padding: 5vh 5vw;
+            border-radius: 20px;
+            margin: 0 auto;
+            max-width: 800px; 
+        }
+
+        #user-question,
+        #chatgpt-response {
+            border: 2px solid #ff5555; 
+            border-radius: 10px;
+            outline: none;
+            padding: 1em;
+            width: calc(100% - 24px);
+            max-width: 500px;
+            margin: 0 auto 3vh;
+            display: block;
+            box-sizing: border-box;
+        }
+
+        .btn-large {
+            padding: 1em 2em;
+            font-size: calc(1em + 0.3vw);
+            background-color: #912c18; 
+            color: #fff;
+            border-radius: 10px;
+            border: none;
+            display: block;
+            margin: 4vh auto; 
+        }
+
+        #chatgpt-response {
+            height: auto;
+            min-height: 100px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 1em;
+            position: relative;
+            border-radius: 10px;
+            padding-right: 40px;
+            margin-bottom: 3vh; 
+            background-color: #fff; 
+            color: #333; 
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+        }
+
+        #copy-btn {
+            padding: 0.5em 1em;
+            font-size: calc(0.7em + 0.2vw); 
+            background-color: #ff5555; 
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 2vh; 
+        }
+
+        .styled-response {
+            background-color: #f9f9f9;
+            padding: 1em;
+            border-radius: 10px;
+            margin-top: 3vh; 
+            font-style: italic;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+        }
+
+        @media (max-width: 768px) {
+            .call-to-action-area {
+                padding: 8vw 5vw;
+            }
+
+            #user-question,
+            #chatgpt-response {
+                width: calc(100% - 20px);
+                padding: 0.8em;
+            }
+
+            .btn-large {
+                padding: 0.8em 1.6em;
+                font-size: calc(1em + 0.2vw);
+                margin: 8vh auto;
+            }
+        }
+                .custom-btn {
+    background-color: #3498db; 
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 10px;
+    text-align: center; 
+}
+
+
+@media (max-width: 600px) {
+    .custom-btn {
+ 
+        width: 100%;
+        z-index: 9999;
+    }
+}
+
+
+        @media (max-width: 600px) {
+           
+            .container {
+                padding: 15px;
+            }
+            input[type="file"], input[type="submit"] {
+                padding: 10px;
+            }
+            .banner {
+                font-size: 18px;
+            }
+            .banner span {
+                font-size: 14px;
+            }
+            .watermark {
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+  
+    <div class="banner_section">
+        <h1>ChatGPT By NepDevs</h1>
+    </div>
+    
+
+    <div class="call-to-action-area">
+        <div class="container">
+            <div class="form-group">
+                <input type="text" class="form-control" id="user-question" placeholder="Ask a question">
+            </div>
+            <div class="form-group">
+                <button onclick="callCHATGPT()" class="btn btn-large">
+                    Click Answer
+                </button>
+            </div>
+            <div class="form-group" style="position: relative;">
+                <textarea class="form-control" id="chatgpt-response" placeholder="Response" rows="8" resize="none" readonly="true"></textarea>
+               
+<center> <button id="copy-btn" onclick="copyOutput()">Copy</button>
+            </div>
+            <div class="styled-response" id="styled-response"></div>
+        </div>
+    </div>
+    
+
+    <div class="footer_section">
+    
+    </div>
+    
+    
+    <script>
+    	// source By @devsnp nepcoder
+        async function callCHATGPT() {
+            var responseText = document.getElementById("chatgpt-response");
+            responseText.innerHTML = "Loading the answer..."; // Display loading message
+// source By @devsnp nepcoder
+            var xhr = new XMLHttpRequest();
+            var url = "https://chatgpt.apinepdev.workers.dev";
+            var userQuestion = encodeURIComponent(document.getElementById("user-question").value);
+            url += `?question=${userQuestion}`;
+            xhr.open("GET", url, true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    var answer = response.answer;
+
+                    var responseText = document.getElementById("chatgpt-response");
+                    responseText.innerHTML = answer; // Display the answer
+
+                
+                    var styledResponse = document.getElementById("styled-response");
+                    styledResponse.innerHTML = `
+                        <div class="styled-response-box">
+                            ${answer}
+                        </div>
+                    `;
+                }
+            };
+            xhr.send();
+        }
+// source By @devsnp nepcoder
+        function copyOutput() {
+            var output = document.getElementById("chatgpt-response");
+            output.select();
+            document.execCommand("copy");
+        }
+    </script>
+ 
+    <center>
+        <a href="https://t.me/DEVSNP">
+            <button class="btn-11 custom-btn" style="width: 40vw; height: 40px; margin-top: 10px;"><b style="color: white;">Made by Nep Coder</b></button>
+        </a>
+    </center>
+
+ 
+</body>
+</html>
